@@ -1,11 +1,127 @@
 ---
-title: "GitHub Practice 01"
+title: The Geography of Care
+format:
+  closeread-html:
+    cr-style:
+      narrative-background-color-overlay: black
+      narrative-background-color-sidebar: slategrey
+      section-background-color: "#1ecad3"
 ---
 
-## Quarto
+::: {.cr-section layout="sidebar-left"}
+Across the 268,597 square miles of Texas, access to women’s healthcare is deeply uneven. Large regions of the state function as “care deserts,” where high- population communities have few or sometimes no access to nearby clinics providing essential services like contraception, cancer screenings, and preventive care. Underfunding, clinic closures, and restrictive and changing policies have widened these gaps, leaving low-income, rural, and underserved Texans facing long travel distances, limited transportation options, and months-long wait times. These barriers make timely, comprehensive healthcare out of reach for many, underscoring the urgent need for solutions that meet people where they are. That’s where mobile health care units come in.
 
-Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
+::: {focus-on="cr-myplot"}
+This paragraph and the one that follows will appear as one narrative block
 
-```{r}
-1 + 1
+When these paragraphs scroll into view, they will reveal a histogram.\@cr-myplot
+:::
+
+::: {#cr-myplot}
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+library(leaflet)
+library(sf)
+library(rmapshaper)
+
+library(sf)
+library(leaflet)
+library(classInt)
+
+center_lng <- -97.3; center_lat <- 31.0
+a <- list(west=-100.5, south=28.3, east=-94.5, north=33.8)
+line_lng <- c(-98.493, -97.743, -97.146, -96.797)
+line_lat <- c( 29.424,  30.267,  31.549,  32.776)
+p_lng <- c(-98.493,-98.125,-97.941,-97.743,-97.678,-97.677,-97.730,-97.342,-97.146,-96.467,-97.108,-96.797,-95.369)
+p_lat <- c( 29.424, 29.703, 29.883, 30.267, 30.508, 30.633, 31.117, 31.098, 31.549, 32.095, 32.735, 32.776, 29.760)
+
+texas_roads_stfp <- st_read("J:/Shared drives/Policy & Research/Mobile Units/STFP_routes.geojson", quiet=TRUE)
+texas_roads_stfp <- st_transform(texas_roads_stfp, 4326)
+
+
+texas_WRA <- st_read("J:/Shared drives/Policy & Research/Mobile Units/FPPWRA100.geojson", quiet=TRUE)
+texas_WRA <- st_transform(texas_WRA, 4326)
+texas_WRA <- ms_simplify(texas_WRA, keep = 0.05, keep_shapes = TRUE)
+
+
+jenks_breaks <- classIntervals(texas_WRA$NUMPOINTS_FPP, n = 10)
+
+
+pal_tx <- colorNumeric("YlOrRd", texas_WRA$NUMPOINTS_FPP)
+
+pal_tx_01 <- colorBin(
+  palette = "BuGn",                      # Blue to green
+  bins = jenks_breaks$brks,             # Jenks breaks
+  domain = texas_WRA$NUMPOINTS_FPP,
+  na.color = "white"
+)
+
+leaflet(width = "68vw", height = "100vh") |>
+  
+ addPolygons(
+    data = texas_WRA,
+    group = "FPP.per.1000.WRA.",
+    fillColor = ~pal_tx(texas_WRA$NUMPOINTS_FPP),
+    weight = 1, color = "white", fillOpacity = 0.6, stroke = TRUE,
+    highlightOptions = highlightOptions( # Define highlight options
+      weight = 5, opacity = 1, # Thicker border on hover 
+      color = "yellow"), # Bring the highlighted polygon to the front,
+    label = ~paste(" There are", texas_WRA$NUMPOINTS_FPP, "providers per 1000 women aged 15 to 49 in this county."))
+
+
+
 ```
+:::
+:::
+
+::: {.cr-section layout="sidebar-left"}
+::: {focus-on="cr-myplot1"}
+This paragraph and the one that follows will appear as one narrative block
+
+When these paragraphs scroll into view, they will reveal a histogram.
+:::
+
+::: {#cr-myplot1}
+```{r, echo=FALSE, warning= FALSE}
+library(sf)
+library(leaflet)
+library(sf)
+library(rmapshaper)
+
+texas_roads_stfp <- st_read("J:/Shared drives/Policy & Research/Mobile Units/STFP_routes.geojson", quiet=TRUE)
+texas_roads_stfp <- st_transform(texas_roads_stfp, 4326)
+
+
+leaflet(width = "68vw", height = "100vh") |>
+    addProviderTiles("CartoDB.Positron") |>
+  addPolylines(
+    data = texas_roads_stfp,
+    color = "cyan",
+    weight = 3,          # or 2–4 if it's too thick
+    opacity = 0.5,        # use opacity (not fillOpacity) for lines
+    group = "STFP",
+    label =  ~paste("There were", "INSERT VALUE", "served by South Texas Family Planning Corporation", "in",texas_roads_stfp$county,"in 2025 due to MHU services."),
+    labelOptions = labelOptions(
+      noHide = FALSE,
+      style = list(
+        "font-size"  = "16px",
+        "font-weight"= "bold",
+        "color"      = "black"
+      )
+    )
+  )
+
+```
+:::
+:::
+
+::: {.cr-section layout="sidebar-left"}
+::: {focus-on="cr-myimage"}
+This paragraph and the one that follows will appear as one narrative block
+
+When these paragraphs scroll into view, they will reveal a histogram.
+:::
+
+::: {#cr-myimage}
+![](J:/Shared%20drives/Policy%20&%20Research/Mobile%20Units/txcapitol.gif)
+:::
+:::
