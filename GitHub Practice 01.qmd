@@ -118,7 +118,7 @@ leaflet(width = "68vw", height = "100vh") |>
 ::: {focus-on="cr-myimage"}
 This paragraph and the one that follows will appear as one narrative block
 
-When these paragraphs scroll into view, they will reveal a histogram.
+When these paragraphs scroll into view, they will reveal a histogram.VTEST
 :::
 
 ::: {#cr-myimage}
